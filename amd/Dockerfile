@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:1.13.2-py3-jupyter
+FROM rocm/pytorch:rocm2.7_ubuntu18.04_py3.6_pytorch
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         gfortran \
@@ -11,14 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
-
 RUN pip install --no-cache-dir fastai fastai jupyter_contrib_nbextensions 
 
-RUN cd /tf && git clone https://github.com/fastai/course-v3
-
-RUN cd /tf && ln -s course-v3/nbs/dl1 part1-lessions
-RUN cd /tf && ln -s course-v3/nbs/dl2 part2-lessions
+RUN mkdir /tf && cd /tf && git clone https://github.com/fastai/course-v3
 
 RUN jupyter contrib nbextension install --user && \
     jupyter nbextensions_configurator enable --user
